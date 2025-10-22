@@ -35,9 +35,9 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
     /**
      * Logger instance
      *
-     * @var bool|WC_Logger
+     * @var null|WC_Logger
      */
-    public static bool|WC_Logger $log = false;
+    public $log = null;
 
     /**
      * Singleton instance
@@ -65,11 +65,10 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
     public function __construct()
     {
         parent::__construct();
-
+        $this->log = wc_get_logger();
         // Initialize form fields and settings
         $this->init_form_fields();
         $this->init_settings();
-
         // Load settings
         $this->title = $this->get_option('title', __('N-Genius by Network', 'ngenius'));
         $this->description = $this->get_option('description', __('Pay securely via N-Genius by Network.', 'ngenius'));
@@ -92,13 +91,10 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
      * @param string $level Optional. Default 'info'. Possible values:
      *                        emergency|alert|critical|error|warning|notice|info|debug.
      */
-    public static function log(string $message, string $level = 'debug')
+    public function log(string $message, string $level = 'debug')
     {
-        if (self::$logEnabled) {
-            if (empty(self::$log)) {
-                self::$log = wc_get_logger();
-            }
-            self::$log->log($level, $message, array('source' => 'ngenius'));
+        if ('yes' === $this->get_option('debug', 'no')) {
+            $this->log($level, $message, array('source' => 'ngenius'));
         }
     }
 
@@ -157,7 +153,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
                     as_unschedule_all_actions($cron_hook);
                 }
 
-                self::log('Cleared cron event on plugin update: ' . $cron_hook, 'info');
+                $this->log('Cleared cron event on plugin update: ' . $cron_hook, 'info');
             }
         }
     }
@@ -177,7 +173,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
             as_unschedule_all_actions($cron_hook);
         }
 
-        self::log('Cleared cron event on plugin deactivation: ' . $cron_hook, 'info');
+        $this->log('Cleared cron event on plugin deactivation: ' . $cron_hook, 'info');
     }
 
     /**
@@ -249,7 +245,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
 
         // Check if the order object is valid
         if (!$order instanceof WC_Order) {
-            self::log("Invalid order object for post ID: {$post->ID}", 'error');
+            $this->log("Invalid order object for post ID: {$post->ID}", 'error');
 
             return;
         }
@@ -521,9 +517,17 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
         $order_id = $order->get_id();
         $cache_key = 'ngenius_order_' . $order_id;
 
+        // Check if wp_session exists and has ngenius data
+        $ngenius_session_data = [];
+        if (isset($wp_session) && is_array($wp_session) && isset($wp_session['ngenius'])) {
+            $ngenius_session_data = $wp_session['ngenius'];
+        } else {
+            self::log('Missing or incomplete wp_session data for order: ' . $order_id, 'warning');
+        }
+
         // Prepare the data to be saved
         $data = array_merge(
-            $wp_session['ngenius'],
+            $ngenius_session_data,
             array(
                 'order_id' => $order_id,
                 'currency' => $order->get_currency(),
@@ -582,7 +586,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
         $saved = parent::process_admin_options();
         if ('yes' === $this->get_option('enabled', 'no')) {
             if (empty($this->get_option('outletRef'))) {
-                $this->add_settings_error(
+                $this->add_ngenius_settings_error(
                     'ngenius_error',
                     esc_attr('settings_updated'),
                     __('Invalid Reference ID', 'ngenius'),
@@ -590,7 +594,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
                 );
             }
             if (empty($this->get_option('apiKey'))) {
-                $this->add_settings_error(
+                $this->add_ngenius_settings_error(
                     'ngenius_error',
                     esc_attr('settings_updated'),
                     __('Invalid API Key', 'ngenius'),
@@ -600,25 +604,34 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
             add_action('admin_notices', 'network_international_ngenius_print_errors');
         }
         if ('yes' !== $this->get_option('debug', 'no')) {
-            if (empty(self::$log)) {
-                self::$log = wc_get_logger();
-            }
-            self::$log->clear('ngenius');
+            $this->log->clear('ngenius');
         }
 
         return $saved;
     }
 
-    public function add_settings_error($setting, $code, $message, $type = 'error')
+    /**
+     * Add settings error using WordPress native functionality
+     *
+     * @param string $setting Setting name
+     * @param string $code Error code
+     * @param string $message Error message
+     * @param string $type Error type (error, warning, info, success)
+     */
+    public function add_ngenius_settings_error($setting, $code, $message, $type = 'error')
     {
-        global $wp_settings_errors;
+        // Ensure we're in admin context and the function is available
+        if (is_admin() && !function_exists('add_settings_error')) {
+            require_once ABSPATH . 'wp-admin/includes/template.php';
+        }
 
-        $wp_settings_errors[] = array(
-            'setting' => $setting,
-            'code'    => $code,
-            'message' => $message,
-            'type'    => $type,
-        );
+        // Check if function exists before calling it
+        if (function_exists('add_settings_error')) {
+            add_settings_error($setting, $code, $message, $type);
+        } else {
+            // Fallback to WooCommerce admin notices
+            WC_Admin_Notices::add_custom_notice($setting, $message);
+        }
     }
 
     /**
@@ -668,10 +681,9 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
      * Fetch Order details.
      *
      * @param int $order_id
-     *
-     * @return object
+     * @return object|null
      */
-    public function fetch_order(int $order_id): ?object
+    public function fetch_order(int $order_id)
     {
         global $wpdb;
         $table_name = $wpdb->prefix . 'ngenius_networkinternational';

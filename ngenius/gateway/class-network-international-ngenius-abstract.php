@@ -19,7 +19,6 @@ use Ngenius\NgeniusCommon\Processor\RefundProcessor;
 
 require_once dirname(__FILE__) . '/config/class-network-international-ngenius-gateway-config.php';
 require_once dirname(__FILE__) . '/request/class-network-international-ngenius-gateway-request-token.php';
-require_once dirname(__FILE__) . '/http/class-network-international-ngenius-gateway-http-transfer.php';
 require_once dirname(__FILE__) . '/http/class-network-international-ngenius-gateway-http-abstract.php';
 
 /**
@@ -37,9 +36,9 @@ class NetworkInternationalNgeniusAbstract extends WC_Payment_Gateway
     /**
      * Logger instance
      *
-     * @var bool|WC_Logger
+     * @var null|WC_Logger
      */
-    public static bool|WC_Logger $log = false;
+    public $log = null;
 
     /**
      * Singleton instance
@@ -121,6 +120,10 @@ class NetworkInternationalNgeniusAbstract extends WC_Payment_Gateway
         $this->debugMode     = $this->get_option('debugMode');
 
         self::$logEnabled = $this->debug;
+        // Initialize logger if debug is enabled
+        if ($this->debug && empty($this->log)) {
+            $this->log = wc_get_logger();
+        }
     }
 
     /**
@@ -218,7 +221,17 @@ class NetworkInternationalNgeniusAbstract extends WC_Payment_Gateway
     }
 
 
-    public function validateRefund($token, $config, $order, $orderItem, $amount): bool|array
+    /**
+     * Validates a refund request.
+     *
+     * @param string $token
+     * @param object $config
+     * @param object $order
+     * @param object $orderItem
+     * @param float $amount
+     * @return bool|array
+     */
+    public function validateRefund($token, $config, $order, $orderItem, $amount)
     {
         if ($token) {
             $config->set_token($token);

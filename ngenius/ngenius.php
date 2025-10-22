@@ -5,9 +5,9 @@
  * Description: Receive payments using the Network International Payment Solutions payments provider.
  * Author: Network International
  * Author URI: https://www.network.ae/en
- * Version: 1.3.3
+ * Version: 1.3.4
  * Requires at least: 6.0
- * Requires PHP: 8.0
+ * Requires PHP: 7.4
  * Tested up to: 6.8.2
  * WC tested up to: 10.1.2
  * WC requires at least: 6.0
@@ -36,8 +36,8 @@ add_action('plugins_loaded', function() {
     }
 });
 
-if (version_compare(phpversion(), '8.0', '<')) {
-    die("N-Genius Online by Network requires PHP 8.0 or higher.");
+if (version_compare(phpversion(), '7.4', '<')) {
+    die("N-Genius Online by Network requires PHP 7.4 or higher.");
 }
 
 $f = dirname(__FILE__);
@@ -46,7 +46,7 @@ require_once "$f/vendor/autoload.php";
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Ngenius\NgeniusCommon\NgeniusOrderStatuses;
 
-define('NETWORK_INTERNATIONAL_NGENIUS_VERSION', '1.3.3'); // WRCS: DEFINED_VERSION.
+define('NETWORK_INTERNATIONAL_NGENIUS_VERSION', '1.3.4'); // WRCS: DEFINED_VERSION.
 define(
     'NETWORK_INTERNATIONAL_NGENIUS_URL',
     untrailingslashit(plugins_url(basename(plugin_dir_path(__FILE__)), basename(__FILE__)))

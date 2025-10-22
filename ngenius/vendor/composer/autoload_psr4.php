@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'megastruktur\\' => array($vendorDir . '/megastruktur/phone-country-codes/src'),
-    'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-factory/src', $vendorDir . '/psr/http-message/src'),
+    'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src', $vendorDir . '/psr/http-factory/src'),
     'Psr\\Http\\Client\\' => array($vendorDir . '/psr/http-client/src'),
     'Ngenius\\NgeniusCommon\\' => array($vendorDir . '/ngenius/ngenius-common/src'),
     'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
