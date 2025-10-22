@@ -5,7 +5,7 @@
         'type' => 'composer-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '62bd134240a63d737814f1f749170fbe9359ac47',
+        'reference' => '7f95c54ab7d323441b48e5404208936c4edabc84',
         'name' => 'ngenius/woocommerce',
         'dev' => true,
     ),
@@ -61,7 +61,7 @@
             'type' => 'composer-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '62bd134240a63d737814f1f749170fbe9359ac47',
+            'reference' => '7f95c54ab7d323441b48e5404208936c4edabc84',
             'dev_requirement' => false,
         ),
         'psr/http-client' => array(

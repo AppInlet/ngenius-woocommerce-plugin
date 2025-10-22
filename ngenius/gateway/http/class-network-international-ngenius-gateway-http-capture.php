@@ -32,7 +32,13 @@ class NetworkInternationalNgeniusGatewayHttpCapture extends NetworkInternational
         return $amount;
     }
 
-    public function get_captured_amount($lastTransaction): float|null
+    /**
+     * Gets the captured amount from the last transaction.
+     *
+     * @param object $lastTransaction
+     * @return float|null
+     */
+    public function get_captured_amount($lastTransaction)
     {
         if (isset($lastTransaction->state)
             && ('SUCCESS' === $lastTransaction->state)
@@ -43,7 +49,13 @@ class NetworkInternationalNgeniusGatewayHttpCapture extends NetworkInternational
         return null;
     }
 
-    public function get_transaction_id($lastTransaction): bool|null|string
+    /**
+     * Gets the transaction ID from the last transaction.
+     *
+     * @param object $lastTransaction
+     * @return bool|string|null
+     */
+    public function get_transaction_id($lastTransaction)
     {
         if (isset($lastTransaction->_links->self->href)) {
             $transactionArr = explode('/', $lastTransaction->_links->self->href);
@@ -80,11 +92,10 @@ class NetworkInternationalNgeniusGatewayHttpCapture extends NetworkInternational
     /**
      * Processing of API response
      *
-     * @param array $response_enc
-     *
+     * @param stdClass $response
      * @return array|null
      */
-    protected function post_process(stdClass $response): ?array
+    protected function post_process(stdClass $response)
     {
         if (isset($response->errors)) {
             return null;

@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.4](https://github.com/network-international/ngenius-woocommerce-plugin/releases/tag/1.3.4)
+
+### Added
+- Added PHP 7.4 support.
+
+### Changed
+- Refactored `add_settings_error` to use WordPress Settings API; removed direct `$wp_settings_errors` manipulation.
+- JS block registration now handles missing/undefined server data in `index.js`.
+- Synced `package.json` version with PHP plugin version.
+- Improved logging handling (`?WC_Logger`).
+- Improved `save_data()` to handle missing/incomplete session data gracefully.
+- Code quality improvements.
+
 ## [1.3.3](https://github.com/network-international/ngenius-woocommerce-plugin/releases/tag/1.3.3)
 
 ### Fixed

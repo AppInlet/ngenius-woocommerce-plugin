@@ -41,7 +41,7 @@ class NetworkInternationalNgeniusGatewayRequestToken
      *
      * @return WP_Error|string|null
      */
-    public function get_access_token(): WP_Error|string|null
+    public function get_access_token()
     {
         require_once(dirname(__DIR__) . '/http/class-network-international-ngenius-gateway-http-fetch.php');
 

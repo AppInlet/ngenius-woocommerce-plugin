@@ -273,7 +273,6 @@ class NetworkInternationalNgeniusGatewayPayment
         include_once dirname(__FILE__) . '/http/class-network-international-ngenius-gateway-http-abstract.php';
         include_once dirname(__FILE__) . '/config/class-network-international-ngenius-gateway-config.php';
         include_once dirname(__FILE__) . '/request/class-network-international-ngenius-gateway-request-token.php';
-        include_once dirname(__FILE__) . '/http/class-network-international-ngenius-gateway-http-transfer.php';
         include_once dirname(__FILE__) . '/http/class-network-international-ngenius-gateway-http-fetch.php';
 
         $gateway     = new NetworkInternationalNgeniusGateway();
@@ -353,11 +352,10 @@ class NetworkInternationalNgeniusGatewayPayment
     /**
      * Fetch Order details.
      *
-     * @param string $where
-     *
+     * @param string $order_ref
      * @return object|null
      */
-    public function fetch_order_by_reference(string $order_ref): ?object
+    public function fetch_order_by_reference(string $order_ref)
     {
         global $wpdb;
 
@@ -416,8 +414,10 @@ class NetworkInternationalNgeniusGatewayPayment
 
     /**
      * Cron Job function
+     *
+     * @return bool|string
      */
-    public function order_update(): bool|string
+    public function order_update()
     {
         wc_get_logger()->debug("N-GENIUS: Cron started");
 

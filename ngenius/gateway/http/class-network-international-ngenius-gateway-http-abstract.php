@@ -36,10 +36,9 @@ abstract class NetworkInternationalNgeniusGatewayHttpAbstract
      * Places request to gateway.
      *
      * @param NgeniusHTTPTransfer $transferObject
-     *
      * @return WP_Error|array|stdClass|null
      */
-    public function place_request(NgeniusHttpTransfer $transferObject): WP_Error|array|null|stdClass
+    public function place_request(NgeniusHttpTransfer $transferObject)
     {
         $this->orderStatus = NgeniusOrderStatuses::orderStatuses('N-Genius', 'ng');
 
@@ -60,8 +59,13 @@ abstract class NetworkInternationalNgeniusGatewayHttpAbstract
 
     abstract protected function pre_process(array $data);
 
-
-    protected function post_process(stdClass $response): array|stdClass|null
+    /**
+     * Post-processes the response from the gateway.
+     *
+     * @param stdClass $response
+     * @return array|stdClass|null
+     */
+    protected function post_process(stdClass $response)
     {
         if (isset($response->_links->payment->href)) {
             global $wp_session;
