@@ -4,11 +4,11 @@ namespace Ngenius\NgeniusCommon;
 
 class NgeniusHTTPTransfer
 {
-    private $url;
-    private $httpVersion;
-    private $headers;
-    private $method;
-    private $data;
+    private string $url;
+    private string $httpVersion;
+    private array $headers;
+    private string $method;
+    private array $data;
 
     /**
      * @param string $url
@@ -18,11 +18,11 @@ class NgeniusHTTPTransfer
      * @param array $headers
      */
     public function __construct(
-        $url,
-        $httpVersion = "",
-        $method = "",
-        $data = [],
-        $headers = []
+        string $url,
+        string $httpVersion = "",
+        string $method = "",
+        array $data = [],
+        array $headers = []
     ) {
         $this->url         = $url;
         $this->httpVersion = $httpVersion;
@@ -76,7 +76,7 @@ class NgeniusHTTPTransfer
     /**
      * @return string
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
@@ -84,7 +84,7 @@ class NgeniusHTTPTransfer
     /**
      * @param string $url
      */
-    public function setUrl($url)
+    public function setUrl(string $url): void
     {
         $this->url = $url;
     }
@@ -92,7 +92,7 @@ class NgeniusHTTPTransfer
     /**
      * @return array
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
@@ -100,7 +100,7 @@ class NgeniusHTTPTransfer
     /**
      * @param array $headers
      */
-    public function setHeaders($headers)
+    public function setHeaders(array $headers): void
     {
         $this->headers = $headers;
     }
@@ -108,7 +108,7 @@ class NgeniusHTTPTransfer
     /**
      * @return string
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->method;
     }
@@ -116,7 +116,7 @@ class NgeniusHTTPTransfer
     /**
      * @param string $method
      */
-    public function setMethod($method)
+    public function setMethod(string $method): void
     {
         $this->method = $method;
     }
@@ -124,7 +124,7 @@ class NgeniusHTTPTransfer
     /**
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->data ?? [];
     }
@@ -132,7 +132,7 @@ class NgeniusHTTPTransfer
     /**
      * @param array $data
      */
-    public function setData($data)
+    public function setData(array $data): void
     {
         $this->data = $data;
     }
@@ -140,7 +140,7 @@ class NgeniusHTTPTransfer
     /**
      * @return string
      */
-    public function getHttpVersion()
+    public function getHttpVersion(): string
     {
         return $this->httpVersion ?? "";
     }
@@ -148,12 +148,12 @@ class NgeniusHTTPTransfer
     /**
      * @param string $httpVersion
      */
-    public function setHttpVersion($httpVersion)
+    public function setHttpVersion(string $httpVersion): void
     {
         $this->httpVersion = $httpVersion;
     }
 
-    public function build($requestData)
+    public function build(array $requestData): void
     {
         $this->url    = $requestData["uri"];
         $this->method = $requestData["method"];

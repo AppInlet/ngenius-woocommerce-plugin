@@ -396,7 +396,7 @@
             "require": {
                 "guzzlehttp/guzzle": "^7.9",
                 "megastruktur/phone-country-codes": "0.4",
-                "php": "^7.4"
+                "php": "^8.0"
             },
             "type": "library",
             "autoload": {
@@ -703,7 +703,7 @@
     "platform": [],
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.4"
+        "php": "8.0"
     },
     "plugin-api-version": "2.2.0"
 }

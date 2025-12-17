@@ -4,13 +4,13 @@ namespace Ngenius\NgeniusCommon\Processor;
 
 class TransactionProcessor
 {
-    private $response;
+    private array $response;
     private const EMBEDDED_LITERAL    = '_embedded';
     private const CAPTURE_LITERAL     = 'cnp:capture';
     private const REFUND_LITERAL      = 'cnp:refund';
     private const NGENIUS_CUP_RESULTS = 'cnp:china_union_pay_results';
 
-    public function __construct($response)
+    public function __construct(array $response)
     {
         $this->response = $response;
     }
@@ -18,7 +18,7 @@ class TransactionProcessor
     /**
      * @return array
      */
-    public function getResponse()
+    public function getResponse(): array
     {
         return $this->response;
     }
@@ -28,7 +28,7 @@ class TransactionProcessor
      *
      * @return void
      */
-    public function setResponse($response)
+    public function setResponse(array $response): void
     {
         $this->response = $response;
     }
@@ -38,7 +38,7 @@ class TransactionProcessor
      *
      * @return float
      */
-    public function getTotalRefunded()
+    public function getTotalRefunded(): float
     {
         $refunded_amt = 0.00;
 
@@ -60,7 +60,7 @@ class TransactionProcessor
      *
      * @return float
      */
-    public function getTotalCaptured()
+    public function getTotalCaptured(): float
     {
         $captured_amt = 0.00;
         if (isset($this->response[self::EMBEDDED_LITERAL][self::CAPTURE_LITERAL]) && is_array(
@@ -79,7 +79,7 @@ class TransactionProcessor
      *
      * @return array
      */
-    public function getLastRefundTransaction()
+    public function getLastRefundTransaction(): array
     {
         return end($this->response[self::EMBEDDED_LITERAL][self::REFUND_LITERAL]);
     }
@@ -89,7 +89,7 @@ class TransactionProcessor
      *
      * @return array
      */
-    public function getLastCaptureTransaction()
+    public function getLastCaptureTransaction(): array
     {
         return end($this->response[self::EMBEDDED_LITERAL][self::CAPTURE_LITERAL]);
     }
@@ -101,7 +101,7 @@ class TransactionProcessor
      *
      * @return float
      */
-    public function getTransactionAmount($transaction)
+    public function getTransactionAmount(array $transaction): float
     {
         $amount = 0.00;
         if (isset($transaction['state'])
@@ -122,7 +122,7 @@ class TransactionProcessor
      *
      * @return string
      */
-    public function getTransactionID($transaction)
+    public function getTransactionID($transaction): string
     {
         $transactionId = '';
         if (isset($transaction['_links']['self']['href'])) {

@@ -14,7 +14,7 @@ class ValueFormatter
      *
      * @return float|int
      */
-    public static function formatOrderStatusAmount($currencyCode, $amount)
+    public static function formatOrderStatusAmount($currencyCode, $amount): float|int
     {
         if (in_array($currencyCode, ['UGX', 'XOF'])) {
             $amount *= 100;
@@ -35,7 +35,7 @@ class ValueFormatter
      *
      * @return void
      */
-    public static function formatCurrencyAmount($currencyCode, &$amount)
+    public static function formatCurrencyAmount($currencyCode, &$amount): void
     {
         if (in_array($currencyCode, ['UGX', 'XOF'])) {
             $amount /= 100;
@@ -52,7 +52,7 @@ class ValueFormatter
      *
      * @return void
      */
-    public static function formatCurrencyDecimals($currencyCode, &$amount)
+    public static function formatCurrencyDecimals($currencyCode, &$amount): void
     {
         $amount = number_format($amount, self::getCurrencyDecimals($currencyCode));
     }
@@ -65,7 +65,7 @@ class ValueFormatter
      *
      * @return int
      */
-    public static function floatToIntRepresentation($currencyCode, $floatNumber)
+    public static function floatToIntRepresentation($currencyCode, $floatNumber): int
     {
         $floatNumber = number_format($floatNumber, self::getCurrencyDecimals($currencyCode));
 
@@ -84,7 +84,7 @@ class ValueFormatter
      *
      * @return float|int
      */
-    public static function intToFloatRepresentation($currencyCode, $integer)
+    public static function intToFloatRepresentation(string $currencyCode, int $integer): float|int
     {
         $decimalPlaces = self::getCurrencyDecimals($currencyCode);
 
@@ -104,7 +104,7 @@ class ValueFormatter
      *
      * @return int
      */
-    public static function getCurrencyDecimals($currency)
+    public static function getCurrencyDecimals($currency): int
     {
         $currencyFormatter = new NumberFormatter('en_EN', NumberFormatter::CURRENCY);
         $currencyFormatter->setTextAttribute(NumberFormatter::CURRENCY_CODE, $currency);
