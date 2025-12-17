@@ -37,7 +37,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
      *
      * @var null|WC_Logger
      */
-    public $log = null;
+    public $logger = null;
 
     /**
      * Singleton instance
@@ -65,7 +65,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
     public function __construct()
     {
         parent::__construct();
-        $this->log = wc_get_logger();
+        $this->logger = wc_get_logger();
         // Initialize form fields and settings
         $this->init_form_fields();
         $this->init_settings();
@@ -94,7 +94,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
     public function log(string $message, string $level = 'debug')
     {
         if ('yes' === $this->get_option('debug', 'no')) {
-            $this->log($level, $message, array('source' => 'ngenius'));
+            $this->logger->log($level, $message, array('source' => 'ngenius'));
         }
     }
 
@@ -427,10 +427,10 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
         include_once dirname(__FILE__) . '/validator/class-network-international-ngenius-gateway-validator-response.php';
 
         global $woocommerce;
-        $order = wc_get_order($order_id);
-        $config = new NetworkInternationalNgeniusGatewayConfig($this, $order);
+        $order       = wc_get_order($order_id);
+        $config       = new NetworkInternationalNgeniusGatewayConfig($this, $order);
         $token_class = new NetworkInternationalNgeniusGatewayRequestToken($config);
-        $data = [];
+        $data        = [];
 
 
         if ($config->is_complete()) {
@@ -439,13 +439,13 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
                 $config->set_token($token);
                 if ($config->get_payment_action() == "authorize") {
                     $request_class = new NetworkInternationalNgeniusGatewayRequestAuthorize($config);
-                    $request_http = new NetworkInternationalNgeniusGatewayHttpAuthorize();
+                    $request_http  = new NetworkInternationalNgeniusGatewayHttpAuthorize();
                 } elseif ($config->get_payment_action() == "sale") {
                     $request_class = new NetworkInternationalNgeniusGatewayRequestSale($config);
-                    $request_http = new NetworkInternationalNgeniusGatewayHttpSale();
+                    $request_http  = new NetworkInternationalNgeniusGatewayHttpSale();
                 } elseif ($config->get_payment_action() == "purchase") {
                     $request_class = new NetworkInternationalNgeniusGatewayRequestPurchase($config);
-                    $request_http = new NetworkInternationalNgeniusGatewayHttpPurchase();
+                    $request_http  = new NetworkInternationalNgeniusGatewayHttpPurchase();
                 }
 
 
@@ -474,7 +474,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
                     $this->save_data($order);
                     $woocommerce->cart->empty_cart();
                     $data = array(
-                        'result' => 'success',
+                        'result'   => 'success',
                         'redirect' => $result,
                     );
                 }
@@ -514,7 +514,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
         global $wpdb;
         global $wp_session;
 
-        $order_id = $order->get_id();
+        $order_id  = $order->get_id();
         $cache_key = 'ngenius_order_' . $order_id;
 
         // Check if wp_session exists and has ngenius data
@@ -522,7 +522,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
         if (isset($wp_session) && is_array($wp_session) && isset($wp_session['ngenius'])) {
             $ngenius_session_data = $wp_session['ngenius'];
         } else {
-            self::log('Missing or incomplete wp_session data for order: ' . $order_id, 'warning');
+            $this->log('Missing or incomplete wp_session data for order: ' . $order_id, 'warning');
         }
 
         // Prepare the data to be saved
@@ -531,7 +531,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
             array(
                 'order_id' => $order_id,
                 'currency' => $order->get_currency(),
-                'amount' => $order->get_total(),
+                'amount'   => $order->get_total(),
             )
         );
 
@@ -604,7 +604,7 @@ class NetworkInternationalNgeniusGateway extends NetworkInternationalNgeniusAbst
             add_action('admin_notices', 'network_international_ngenius_print_errors');
         }
         if ('yes' !== $this->get_option('debug', 'no')) {
-            $this->log->clear('ngenius');
+            $this->logger->clear('ngenius');
         }
 
         return $saved;

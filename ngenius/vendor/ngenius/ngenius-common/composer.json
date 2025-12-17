@@ -2,7 +2,7 @@
   "name": "ngenius/ngenius-common",
   "description": "N-Genius common class for modules.",
   "type": "library",
-  "license": "GPL-3.0-or-later",
+  "license": "GPL-3.0",
   "homepage": "https://github.com/Ngenius/ngenius-common",
   "authors": [
     {
@@ -11,10 +11,9 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
+    "php": "^8.0",
     "megastruktur/phone-country-codes": "0.4",
-    "guzzlehttp/guzzle": "^7.9",
-    "ext-intl": "*"
+    "guzzlehttp/guzzle": "^7.9"
   },
   "autoload": {
     "psr-4": {

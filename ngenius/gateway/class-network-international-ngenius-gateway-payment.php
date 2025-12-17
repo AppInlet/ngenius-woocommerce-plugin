@@ -276,8 +276,8 @@ class NetworkInternationalNgeniusGatewayPayment
         include_once dirname(__FILE__) . '/http/class-network-international-ngenius-gateway-http-fetch.php';
 
         $gateway     = new NetworkInternationalNgeniusGateway();
-        $order = $this->fetch_order_by_reference($order_ref);
-        $config      = new NetworkInternationalNgeniusGatewayConfig($gateway, $order);
+        $order       = $this->fetch_order_by_reference($order_ref);
+        $config       = new NetworkInternationalNgeniusGatewayConfig($gateway, $order);
         $token_class = new NetworkInternationalNgeniusGatewayRequestToken($config);
         $token       = $token_class->get_access_token();
 

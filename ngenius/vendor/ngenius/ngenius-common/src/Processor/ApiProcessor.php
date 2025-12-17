@@ -4,14 +4,14 @@ namespace Ngenius\NgeniusCommon\Processor;
 
 class ApiProcessor
 {
-    private $response;
+    private array $response;
 
     public const NGENIUS_CAPTURE_LITERAL  = 'cnp:capture';
     public const NGENIUS_PURCHASED        = 'PURCHASED';
     public const NGENIUS_STATES_ABANDONED = ['STARTED', 'PENDING', 'AWAIT3DS', 'CANCELLED'];
     public const NGENIUS_STATES_SUCCESS   = ['AUTHORISED', self::NGENIUS_PURCHASED, 'CAPTURED'];
 
-    public function __construct($response)
+    public function __construct(array $response)
     {
         $this->response = $response;
     }
@@ -21,7 +21,7 @@ class ApiProcessor
      *
      * @return string|array
      */
-    public function getLastTransaction()
+    public function getLastTransaction(): string|array
     {
         $lastTransaction = '';
         if (isset($this->response['_embedded']['payment'][0]['_embedded'][self::NGENIUS_CAPTURE_LITERAL])
@@ -41,7 +41,7 @@ class ApiProcessor
      *
      * @return string
      */
-    public function getPaymentId()
+    public function getPaymentId(): string
     {
         $paymentId = '';
         if (isset($this->response['_embedded']['payment'][0]['_id'])) {
@@ -57,7 +57,7 @@ class ApiProcessor
      *
      * @return string
      */
-    public function getTransactionId()
+    public function getTransactionId(): string
     {
         $lastTransaction = $this->getLastTransaction();
         $transactionId   = '';
@@ -77,7 +77,7 @@ class ApiProcessor
      *
      * @return int|string
      */
-    public function getCapturedAmount()
+    public function getCapturedAmount(): int|string
     {
         $captureAmount = 0;
         if (isset($this->response['_embedded']['payment'][0]['_embedded'][self::NGENIUS_CAPTURE_LITERAL])
@@ -103,7 +103,7 @@ class ApiProcessor
      *
      * @return string|null
      */
-    public function getState()
+    public function getState(): ?string
     {
         return $this->response['_embedded']['payment'][0]['state'];
     }
@@ -112,7 +112,7 @@ class ApiProcessor
     /**
      * @return array
      */
-    public function getResponse()
+    public function getResponse(): array
     {
         return $this->response;
     }
@@ -120,7 +120,7 @@ class ApiProcessor
     /**
      * @param array $response
      */
-    public function setResponse($response)
+    public function setResponse(array $response): void
     {
         $this->response = $response;
     }
@@ -144,7 +144,7 @@ class ApiProcessor
      *
      * @return array|null
      */
-    public function getPaymentResult()
+    public function getPaymentResult(): ?array
     {
         return $this->response['_embedded']['payment'][0];
     }
@@ -154,7 +154,7 @@ class ApiProcessor
      *
      * @return bool
      */
-    public function isPaymentConfirmed()
+    public function isPaymentConfirmed(): bool
     {
         return in_array($this->getState(), self::NGENIUS_STATES_SUCCESS);
     }
@@ -164,7 +164,7 @@ class ApiProcessor
      *
      * @return bool
      */
-    public function isPaymentAbandoned()
+    public function isPaymentAbandoned(): bool
     {
         return in_array($this->getState(), self::NGENIUS_STATES_ABANDONED);
     }

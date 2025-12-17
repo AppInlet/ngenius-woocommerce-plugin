@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.5](https://github.com/network-international/ngenius-woocommerce-plugin/releases/tag/1.3.5)
+
+### Fixed
+
+- **Fatal Memory Error**: Fixed an infinite loop in the WC logger affecting some sites.
+
 ## [1.3.4](https://github.com/network-international/ngenius-woocommerce-plugin/releases/tag/1.3.4)
 
 ### Added

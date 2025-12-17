@@ -12,7 +12,7 @@ class NgeniusHTTPCommon
      *
      * @return string|bool
      */
-    public static function placeRequest(NgeniusHTTPTransfer $ngeniusHTTPTransfer)
+    public static function placeRequest(NgeniusHTTPTransfer $ngeniusHTTPTransfer): string|bool
     {
         $client       = new Client();
         $method       = $ngeniusHTTPTransfer->getMethod();
@@ -20,21 +20,11 @@ class NgeniusHTTPCommon
         $headersArray = $ngeniusHTTPTransfer->getHeaders();
         $data         = $ngeniusHTTPTransfer->getData();
 
-        $httpVersionRaw = $ngeniusHTTPTransfer->getHttpVersion();
-        $httpVersion = '1.1';
-        switch ($httpVersionRaw) {
-            case "CURL_HTTP_VERSION_1_0":
-                $httpVersion = '1.0';
-                break;
-            case "CURL_HTTP_VERSION_2_0":
-            case "CURL_HTTP_VERSION_2TLS":
-            case "CURL_HTTP_VERSION_2_PRIOR_KNOWLEDGE":
-                $httpVersion = '2.0';
-                break;
-            default:
-                $httpVersion = '1.1';
-                break;
-        }
+        $httpVersion = match ($ngeniusHTTPTransfer->getHttpVersion()) {
+            "CURL_HTTP_VERSION_1_0" => '1.0',
+            "CURL_HTTP_VERSION_2_0", "CURL_HTTP_VERSION_2TLS", "CURL_HTTP_VERSION_2_PRIOR_KNOWLEDGE" => '2.0',
+            default => '1.1',
+        };
 
         // Convert the headers array to an associative array for Guzzle
         $headers = [];
