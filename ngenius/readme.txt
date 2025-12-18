@@ -22,6 +22,9 @@ We provide a secure checkout experience for your shoppers, knowing that intellig
 Should you wish to, you may compile the WooCommerce Blocks Support <a href="https://github.com/network-international/ngenius-woocommerce-plugin?tab=readme-ov-file#compile-woocommerce-blocks-support-from-source">directly from source</a>.
 
 == Changelog ==
+= 1.3.5 - 2025-12-18 =
+ * Fatal Memory Error: Fixed an infinite loop in the WC logger affecting some sites.
+
 = 1.3.4 - 2025-10-22 =
  * Added PHP 7.4 support.
  * Refactored add_settings_error to use WordPress Settings API; removed direct $wp_settings_errors manipulation.
